@@ -1,12 +1,13 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { NextApiRequest } from 'next';
+import { dbMySQL } from '@/app/database/knex';
 
 export async function POST(req: Request){
-  const body = await req.json();
+  // const body = await req.json();
   try {
-    return NextResponse.json({ message: body })
-  } catch (err) {
-    return NextResponse.json({ message: 'Internal server error' })
+    const result = await dbMySQL.select('*').from('user')
+    return NextResponse.json({ data: result }, { status: 200 });
+  } catch (error: any) {
+    return NextResponse.json({ error: error?.message }, { status: 500 });
   }
 }
 
